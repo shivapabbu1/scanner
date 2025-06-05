@@ -1,0 +1,32 @@
+{
+  "centers": [
+    {
+      "id": "1",
+      "name": "Main Center",
+      "address": "123 Business Street, Downtown",
+      "operatingHours": "9:00 AM - 6:00 PM",
+      "activeTokens": [
+        {
+          "id": "token1",
+          "expiresAt": "2025-12-31T23:59:59Z"
+        },
+        {
+          "id": "token2",
+          "expiresAt": "2025-12-31T23:59:59Z"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Branch Center",
+      "address": "456 Commerce Avenue, Uptown",
+      "operatingHours": "8:00 AM - 5:00 PM",
+      "activeTokens": [
+        {
+          "id": "token3",
+          "expiresAt": "2025-12-31T23:59:59Z"
+        }
+      ]
+    }
+  ]
+}
