@@ -1,8 +1,8 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, Image, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useSpinner } from '../context/SpinnerContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -12,7 +12,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
-
+  const { hideSpinner, spinnerVisible } = useSpinner();
   const handleLogin = () => {
     // Demo credentials
     const demoUser = 'admin';
@@ -28,67 +28,89 @@ export default function Login() {
     }
   };
 
+    useEffect(() => {
+    if (spinnerVisible) {
+      hideSpinner();
+    }
+  }, [hideSpinner, spinnerVisible]);
+
   return (
-    <LinearGradient
-      colors={['#2D0047', '#1a002a']}
+    <ImageBackground
+      source={require('../../assets/images/devhausECELoginBackgroundScreen.png')}
+      resizeMode="cover"
       style={styles.container}
     >
-      <View style={styles.rays} />
-      
-      <View style={styles.content}>
-        <View style={styles.form}>
-          <Text style={styles.label}>Username</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter username"
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              value={username}
-              onChangeText={setUsername}
-              autoCapitalize="none"
-            />
-          </View>
-
-          <Text style={styles.label}>Password</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter password"
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!showPassword}
-              autoCapitalize="none"
-            />
-            <TouchableOpacity
-              style={styles.eyeIcon}
-              onPress={() => setShowPassword(!showPassword)}
-            >
-              <Icon
-                name={showPassword ? 'eye-off' : 'eye'}
-                size={24}
-                color="rgba(255, 255, 255, 0.5)"
+      <View style={styles.overlay}>
+        <View style={styles.rays} />
+        
+        <View style={styles.content}>
+          <View style={styles.form}>
+            <Text style={styles.label}>Username</Text>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter username"
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                value={username}
+                onChangeText={setUsername}
+                autoCapitalize="none"
               />
+            </View>
+
+            <Text style={styles.label}>Password</Text>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter password"
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPassword}
+                autoCapitalize="none"
+              />
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={() => setShowPassword(!showPassword)}
+              >
+                <Icon
+                  name={showPassword ? 'eye-off' : 'eye'}
+                  size={24}
+                  color="rgba(255, 255, 255, 0.5)"
+                />
+              </TouchableOpacity>
+            </View>
+
+            {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
+            <TouchableOpacity
+              style={styles.loginButton}
+              onPress={handleLogin}
+            >
+              <Text style={styles.loginButtonText}>LOGIN</Text>
             </TouchableOpacity>
           </View>
 
-          {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
-          <TouchableOpacity
-            style={styles.loginButton}
-            onPress={handleLogin}
-          >
-            <Text style={styles.loginButtonText}>LOGIN</Text>
-          </TouchableOpacity>
+          <View style={styles.bottomView}>
+            <Image
+              source={require('../../assets/images/iBlumLogo.svg')}
+              style={{ width: 120, height: 40 }}
+            />
+          </View>
         </View>
       </View>
-    </LinearGradient>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(45, 0, 71, 0.75)',
   },
   rays: {
     position: 'absolute',
@@ -99,7 +121,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderRadius: width,
     transform: [{ scale: 1.5 }],
-    opacity: 0.1,
+
   },
   content: {
     flex: 1,
@@ -160,5 +182,13 @@ const styles = StyleSheet.create({
     width: 120,
     height: 40,
     marginTop: 40,
+  },
+  bottomView: {
+      width: '100%',
+      height: 50,
+      justifyContent: 'center',
+      alignItems: 'center',
+      position: 'absolute',
+      bottom: 50,
   },
 });
